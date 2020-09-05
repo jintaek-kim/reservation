@@ -1,0 +1,34 @@
+import requests
+import re
+
+output = []
+headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36"}
+url = "https://camping.gtdc.or.kr/DZ_reservation/reserCamping.php?tab=view&xch=reservation&xid=camping_reservchking&mode=view"
+
+add_url = {"searchDate" : "202009"}
+check_list = ["2020-09-29", "2020-09-30", "2020-10-01", "2020-10-02", "2020-10-03", "2020-10-04"]
+output = []
+res = requests.get(url, headers = headers, params=add_url)
+
+#print(res.text)
+
+p = re.compile(".:2020-..-..")
+p2 = re.compile("2020-..-..") 
+
+lst = p.findall(res.text)
+
+#print(lst)
+
+for find_data in lst:
+  if p2.search(find_data).group() in check_list :
+    output.append(find_data)
+
+add_url = {"searchDate" : "202010"}
+res = requests.get(url, headers = headers, params=add_url)
+
+lst = p.findall(res.text)
+
+for find_data in lst:
+  if p2.search(find_data).group() in check_list :
+    output.append(find_data)        
+print (output)    
